@@ -9,12 +9,36 @@ import pandas as pd
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
-word = (pytesseract.image_to_string(Image.open('test.png')))
+word = (pytesseract.image_to_string(Image.open('brownine_mix2.png')))
+# word = 'Testing 1, testing 2, testing 3, testing 4(testing 6, testing 7)'
 print(word)
+word = word.replace('\n',' ')
+word = word.replace('INGREDIENTS: ','')
+word = word.replace('),',')\n')
+word = word.replace(', ',',')
+word = word.replace('.','')
+word = word.replace(' OR ','\n')
+word = word.replace(' (','(')
+# print(word)
 # for some reason, there is an extra linespace at the end of the word
-word = word.strip()
+# print(word)
+print("hello!\n")
+balance = 0
+counter=-1
+for i in word:
+    counter +=1
+    if (i=='('):
+        balance += 1
+    if (i == ')'):
+        balance -= 1
+    if balance == 0 and i == ',' and word[counter-1] != ')':
+        word = word[:counter] + '\n' + word[counter+1:]
 
-cnx = mysql.connector.connect(user='salle142', password='',
+
+words = word.split("\n")
+ingredients = [item.strip() for item in words]
+
+cnx = mysql.connector.connect(user='salle142', password='College05#',
                               host='localhost', database = 'fia')
 
 mycursor = cnx.cursor()
@@ -28,12 +52,17 @@ def has_value(cursor, value):
     row = cursor.fetchone()
     if (row):
         if (row[1] == 1):
-            print(word + ' is in the database and is vegan.')
+            print(value + ' may be vegan.')
         else:
-            print(word + ' is in the database and is not vegan.')
+            print(value + ' is not vegan.')
     else:
-        print(word + ' is not in the database!')
+        print(value + ' is not in the database!')
     return row
 
-has_value(mycursor, word)
+for i in ingredients:
+    if (i.find('(')):
+        x =i.partition('(')
+        # print(x[0])
+    # print(i)
+    has_value(mycursor, x[0])
 cnx.close()
