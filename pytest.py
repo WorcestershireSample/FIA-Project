@@ -1,4 +1,4 @@
-# tessseract stuff
+# tesseract stuff
 from PIL import Image
 import pytesseract
 
