@@ -9,7 +9,7 @@ def filter_image_string(pytesseract_string):
     def buffer_to_string(a):
         newString = ""
         for elt in a:
-            if elt == '\n':
+            if elt == '\n':  # pytesseract adds \n chars in the string for reason unknown to me
                 newString += " "
             else:
                 newString += elt
@@ -35,7 +35,7 @@ def filter_image_string(pytesseract_string):
 
 
 file_name = 'ingredients.png'
-image_string = (pytesseract.image_to_string(Image.open(file_name)))  # pytesseract adds new line character
+image_string = (pytesseract.image_to_string(Image.open(file_name)))
 
 processed_image_string = filter_image_string(image_string)
 
