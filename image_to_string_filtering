@@ -1,0 +1,42 @@
+import pytesseract
+from PIL import Image
+
+# need this if tesseract.exe is not found in PATH variable
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+
+
+def filter_image_string(pytesseract_string):
+    def buffer_to_string(a):
+        newString = ""
+        for elt in a:
+            if elt == '\n':
+                newString += " "
+            else:
+                newString += elt
+        return newString
+
+    buffer = []
+    array = []
+    subIngredient = 0
+    for character in pytesseract_string:
+        if character == '(':
+            subIngredient = 1
+        if character == ')':
+            subIngredient = 0
+        if character == ',' and subIngredient == 1:
+            continue
+        if character == ',' and subIngredient == 0:
+            array.append(buffer_to_string(buffer))
+            buffer.clear()
+        else:
+            buffer.append(character)
+
+    return array
+
+
+file_name = 'ingredients.png'
+image_string = (pytesseract.image_to_string(Image.open(file_name)))  # pytesseract adds new line character
+
+processed_image_string = filter_image_string(image_string)
+
+print(processed_image_string)
