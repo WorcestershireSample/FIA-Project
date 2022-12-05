@@ -45,7 +45,7 @@ def filter_image_string(pytesseract_string):
     return array
 
 
-file_name = 'ingredients.png'
+file_name = '../res/ingredients3.png'
 image_string = (pytesseract.image_to_string(Image.open(file_name)))
 
 processed_image_string = filter_image_string(image_string)
