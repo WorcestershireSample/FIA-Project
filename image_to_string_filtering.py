@@ -1,8 +1,10 @@
 import pytesseract
 from PIL import Image
 
-#  this line breaks the script for Mac OS because of differing file system
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+
+#  this line breaks the script for macOS because of differing file system
+#  add tesseract to path variable on both operating systems to ignore this line
+#  pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 def filter_image_string(pytesseract_string):
     def buffer_to_string(a):
