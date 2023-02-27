@@ -1,0 +1,10 @@
+Both newly added files are stripped from old prototype. They will be useful starting points for their areas.
+  To Do: Add a constructor for client requests to hold the information of the image, processed data, and anything else we need for communication. 
+         Create connection to database / api and construct const variables to hold their addresses.
+         Start on implementing the Spoonacular API as the first tested data processing style < MOST IMPORTANT >
+         Begin preprocessing attemtps on image files. Use preexisting prototype code to examine success of preprocessing. Unit Test???
+         Establish Server / Client connectivity and begin forking / multi-request handling. < FRONT END SUPPORT REQUIRED >
+         Create web scraper API to process ingredients that are odd or require more information as final tested data processing style.
+         Begin on Database hosting and creating database of ingredients and tags for second tested data processing style.
+         Create and use Unit Tests. 
+         Create final connection that sends data back to client and closes child process / request. < FRONT END SUPPORT REQUIRED >
