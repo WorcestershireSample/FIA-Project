@@ -1,0 +1,11 @@
+This file is meant to explain the various ways the backend will handle its processing.
+>clientListener.py #Waits for a client to connect. Forks a child that handles all connection for said client, then waits for further clients.
+>imageFromClient.py #Handles all communication from client to server, and passes it to
+>preprocessing.py #Takes image and works imagery magic to make it more readable for Tesseract. Does not import OCR, passes it to
+>imageToData.py #Takes processed image and converts it to workable array of data. Passes this array of strings to
+>datanet.py #Handles passing array to various data processing areas.
+    >spoonAnalyze.py #Uses Spoonacular to analyze ingredients
+    >SQLAnalyze.py #Uses SQL database to analyze ingredients
+    >webScraperAnalyze.py #Uses web scraper to find more information on ingredients
+# All analyzers pass to
+>dataToClient.py #Similar to imageFromClient, sends now useable data back to client. Ends connection.
