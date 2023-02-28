@@ -116,3 +116,12 @@ def convert_JSON(ingredient_list):
     json_string = json.dumps(ingredient_list)
     return json_string
 
+# Send information to web server, use JSON
+def send_data_to_server(data):
+    url = 'http://example.com/api'
+    headers = {'Content-Type': 'application/json'}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        print('Data sent successfully!')
+    else:
+        print('Error sending data:', response.status_code)
