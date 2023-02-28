@@ -1,11 +1,15 @@
+import json
 import cv2
 # ^ Must be installed via pip
 import os
 import re
 # ^ Should be there by default idk why it didnt work
 import pytesseract
+import requests
+# ^ Another pip install
 from PIL import Image
 
+# Take in a png and convert it to text
 def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format='png', whitelist = None, blacklist = None):
     
     # Load the image
@@ -52,9 +56,10 @@ def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format='
     return text
 
 # testing
-# ingredient_list = optimize_image_for_ocr(r"sem2\brownine_mix.png", whitelist='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()[],')
+ingredient_list = optimize_image_for_ocr(r"sem2\brownine_mix.png", whitelist='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()[],')
 # print(ingredient_list)
 
+# Parse the ingredients into a list
 def parse_ingredients(text): 
 
     # Remove parentheses and their contents
@@ -63,8 +68,11 @@ def parse_ingredients(text):
     # Replace newline characters with spaces
     text = text.replace('\n', ' ')
 
+    # Replace initial INGREDIENTS or CONTAINS with spaces
+    text = text.replace('INGREDIENTS: ', '').replace('CONTAINS: ', '')
+
     # Remove paranthesis again in case any were left over
-    text = text.replace('(','').replace(')','')
+    text = text.replace('(','').replace(')','').replace('.','')
 
     # Split ingredients by commas
     ingredients = text.split(',')
@@ -77,5 +85,34 @@ def parse_ingredients(text):
     
     return ingredients
 
+# convert list to JSON
+
 # testing
 # print(parse_ingredients(ingredient_list))
+
+# Request Spoonacular API to see if ingredient is vegan
+
+# def check_vegan(ingredient, diet):
+#     url = 'https://api.spoonacular.com/recipes/complexSearch'
+#     params = {
+#         'apiKey': '9ff5fa8b2ad548e3948941754a464ec3',
+#         'query': ingredient,
+#         'diet': diet,
+#         'number': 1  # Only need 1 result
+#     }
+#     response = requests.get(url, params=params)
+#     if response.status_code == 200:
+#         data = response.json()
+#         if data['results']:
+#             return data['results'][0]
+#     else:
+#         print(f'Error {response.status_code}: {response.reason}')
+#     return None
+
+# print(check_vegan('chocolate', 'vegan'))
+
+# Convert list to JSON
+def convert_JSON(ingredient_list):
+    json_string = json.dumps(ingredient_list)
+    return json_string
+
