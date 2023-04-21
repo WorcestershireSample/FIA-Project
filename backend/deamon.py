@@ -12,7 +12,7 @@ def monitor_directory(directory):
             new_files_str = ''.join(new_files)
             print(f"New file(s) found: {new_files_str}")
             files |= new_files  # Add new files to file list, probably not necessary but hey!
-            result = subprocess.run([f'python3.10', 'OCRfunc.py', '{directory}/{new_files_str}'], stdout=subprocess.PIPE)
+            result = subprocess.run(['python3.10', 'OCRfunc.py', new_files_str], stdout=subprocess.PIPE) # instead captured as a byte string and stored in memory
             print(result.stdout.decode('utf-8'))
 
 
