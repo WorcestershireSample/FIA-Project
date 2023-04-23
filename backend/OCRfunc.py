@@ -39,7 +39,7 @@ def deskew_image(image_path):
 # deskewed_image.save(r"straight-4.png")
 
 # Take in a png and convert it to text, make preprocessing its own function
-def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format='png', whitelist = None, blacklist = None):
+def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format=['png','jpg','jpeg'], whitelist = None, blacklist = None):
     
     # Load the image
     img = cv2.imread(image_path)
@@ -82,13 +82,16 @@ def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format='
     # Remove the preprocessed image file
     os.remove(preprocessed_image_path)
 
+    # Remove the original image file
+    os.remove(image_path)
+
     return text
 
 # Parse the ingredients into a list
 def parse_ingredients(text): 
 
     # Remove parentheses and their contents
-    text = re.sub(r'\([^)]*\)', '', text)
+    text = re.sub(r'\([^)]*\)', '', text).lower()
     
     # Replace newline characters with spaces
     text = text.replace('\n', ' ')
@@ -108,7 +111,28 @@ def parse_ingredients(text):
     # Remove any empty ingredients
     ingredients = [ingredient for ingredient in ingredients if ingredient]
     
-    return ingredients
+    vegRead = open("veganIngredients.txt", "r")
+    banRead = open("veganBanned.txt", "r")
+    veganList = []
+    banList = []
+
+    for x in vegRead:
+            veganList.append(x.rstrip())
+    for x in banRead:
+            banList.append(x.rstrip())
+    ingredientReading = []
+    for item in ingredients:
+        if item in veganList:
+            ingredientReading.append(item + " is vegan")
+        elif item in banList:
+            ingredientReading.append(item + " is not vegan")
+        else:
+            ingredientReading.append(item + " cannot be read")
+    #print(ingredientReading)
+
+    vegRead.close()
+    banRead.close()
+    return ingredientReading
 
 # convert list to JSON
 
@@ -142,14 +166,17 @@ def convert_JSON(ingredient_list):
     return json_string
 
 # Send information to web server, use JSON
-def send_data_to_server(data):
-    url = 'https://foodingredientanalyzer.online'
+def send_data_to_server(ing):
+    url = 'https://foodingredientanalyzer.online/response.html'
+    #url = 'https://httpbin.org/post'
     headers = {'Content-Type': 'application/json'}
 
+
     # Send the POST request with the JSON data
-    response = requests.post(url, headers=headers, json=data)
+    response = requests.post(url, headers=headers, json=ing, timeout = 5)
     if response.status_code == 200:
-        print('Data sent successfully!')
+        print('Data sent successfully!', response.json())
+        print(response.content)
     else:
         print('Error sending data:', response.status_code)
 
@@ -160,8 +187,7 @@ if __name__ == '__main__':
         image_path = rf'/var/www/foodingredientanalyzer.online/html/images/{image_name}'
         ingredient_list = optimize_image_for_ocr(image_path, whitelist='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ()[],')
         parsed_list = parse_ingredients(ingredient_list)
-        print(parsed_list)
+        #print(parsed_list)
         send_data_to_server(convert_JSON(parsed_list))
     else:
         print("No argument was passed to the script.")
-   
