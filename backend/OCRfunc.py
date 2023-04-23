@@ -39,7 +39,7 @@ def deskew_image(image_path):
 # deskewed_image.save(r"straight-4.png")
 
 # Take in a png and convert it to text, make preprocessing its own function
-def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format=['png','jpg','jpeg'], whitelist = None, blacklist = None):
+def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format='png', whitelist = None, blacklist = None):
     
     # Load the image
     img = cv2.imread(image_path)
@@ -51,6 +51,7 @@ def optimize_image_for_ocr(image_path, lang='eng', image_dpi=300, image_format=[
 
     # Save the preprocessed image
     preprocessed_image_path = f"{image_path}_preprocessed.{image_format}"
+    # preprocessed_image_path = f"_preprocessed.{image_format}"
     cv2.imwrite(preprocessed_image_path, img)
     
 
@@ -176,9 +177,9 @@ def send_data_to_server(ing):
     response = requests.post(url, headers=headers, json=ing, timeout = 5)
     if response.status_code == 200:
         print('Data sent successfully!', response.json())
-        print(response.content)
     else:
         print('Error sending data:', response.status_code)
+    print(response.content)
 
 
 if __name__ == '__main__':
