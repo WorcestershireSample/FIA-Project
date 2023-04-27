@@ -17,7 +17,7 @@ for item in ingredients:
     elif item in banList:
         ingredientReading.append(item + " is not vegan")
     else:
-        ingredientReading.append(item + " cannot be found within database. Searching has found " + scrapeInfoUPC(item))
+        ingredientReading.append(item + " cannot be found within database. Searching has found " + webScraper.scrapeInfoUPC(item))
 print(ingredientReading)
 
 vegRead.close()
