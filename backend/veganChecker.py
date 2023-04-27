@@ -1,5 +1,4 @@
-import requests
-from bs4 import BeautifulSoup
+import webScraper
 
 vegRead = open("veganIngredients.txt", "r")
 banRead = open("veganBanned.txt", "r")
@@ -18,19 +17,8 @@ for item in ingredients:
     elif item in banList:
         ingredientReading.append(item + " is not vegan")
     else:
-        ingredientReading.append(item + " cannot be found within database. Try " + webScrape(item))
+        ingredientReading.append(item + " cannot be found within database. Searching has found " + scrapeInfoUPC(item))
 print(ingredientReading)
 
 vegRead.close()
 banRead.close()
-
-def webScrape(ing):
-    r = requests.get('https://upcfoodsearch.com/food-ingredients/' + ing + '/')
-    soup = BeautifulSoup(r.content, 'html.parser')
-    s = soup.find('div', id= 'main')
-    leftbar = s.find('ul', class_='leftBarList')
-    lines = leftbar.find_all('li')
- 
-    for line in lines:
-        print(line.text)
-    return('https://upcfoodsearch.com/food-ingredients/' + ing + '/')
