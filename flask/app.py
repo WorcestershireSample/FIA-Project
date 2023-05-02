@@ -93,7 +93,7 @@ def parse_ingredients(text):
     ingredientReading = []
     for item in ingredients:
         if item in veganList:
-            ingredientReading.append(item + " is vegan")
+            ingredientReading.append(item + " may be vegan")
         elif item in banList:
             ingredientReading.append(item + " is not vegan")
         else:
