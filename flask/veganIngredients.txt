@@ -110,3 +110,12 @@ salt
 artificial flavor
 sodium bicarbonate
 cocoa
+vegetable oil
+sunflower
+raisins
+whole grain rye
+barley
+whole grain oats
+whole grain triticale
+almonds
+flaxseed and walnuts
